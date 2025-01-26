@@ -5,6 +5,9 @@
   "description": "Integrate the opensource monitoring solution Beszel into Raycast",
   "icon": "extension-icon.png",
   "author": "janbiasi",
+  "external": [
+    "pocketbase"
+  ],
   "categories": [
     "Developer Tools"
   ],

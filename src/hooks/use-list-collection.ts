@@ -4,6 +4,10 @@ import type { ListResult } from "pocketbase";
 
 export interface UseListCollectionOptions {
   /**
+   * How many items per page
+   */
+  perPage?: number;
+  /**
    * @see https://pocketbase.io/docs/api-records/#listsearch-records
    * @example id='abc123'
    */
@@ -31,6 +35,7 @@ export function useListCollection<T>(collection: string, options: UseListCollect
       return `${url}${queryString}` satisfies RequestInfo;
     },
     {
+      cache: "no-cache",
       keepPreviousData: true,
       initialData: [],
       mapResult(result: ListResult<T>) {

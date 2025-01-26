@@ -1,21 +1,26 @@
 import { Icon, List } from "@raycast/api";
 import { useCallback, useEffect, useMemo, useState, type FC } from "react";
 
-import { useListCollection } from "../hooks/use-pocketbase";
+import { useListCollection } from "../hooks/use-list-collection";
 import { SystemStat } from "../types/system-stat";
 import { useFormat } from "../hooks/use-format";
 import type { System } from "../types/system";
 import { getSystemLoadIndicatorIcon } from "../utils/icons";
 import { ListMetadataSectionHeader } from "../components/ListMetadataSectionHeader";
 
+/**
+ * Calculate load average of the system (current: memory, cpu and docker)
+ * @param stat
+ * @returns 0 - 100
+ */
 const getAverageLoadPercentage = (stat: SystemStat) => {
-  const respectedStats = [stat.stats.cpu, stat.stats.mp, stat.stats.dp];
+  const respectedStats = [stat.stats.cpu, stat.stats.mp, stat.stats.dp].filter(Boolean);
   return respectedStats.reduce((a, b) => a + b) / respectedStats.length;
 };
 
 export const StatsDetailView: FC<{ system: System; id: string }> = ({ system, id }) => {
   const { dateTimeFormat } = useFormat();
-  const [interval, setInterval] = useState<string | null>("480m");
+  const [interval, setInterval] = useState<string | null>("120m");
 
   const { data, isLoading, revalidate, pagination } = useListCollection<SystemStat>("system_stats", {
     filter: `system='${id}'&&type='${interval}'`,
