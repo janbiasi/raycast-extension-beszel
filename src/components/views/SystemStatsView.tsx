@@ -1,13 +1,15 @@
 import { Icon, List } from "@raycast/api";
-import { useCallback, useEffect, useMemo, useState, type FC } from "react";
+import { useCallback, useMemo, useState } from "react";
 
-import { useListCollection } from "../hooks/use-list-collection";
-import { SystemStat } from "../types/system-stat";
-import { useFormat } from "../hooks/use-format";
-import type { System } from "../types/system";
-import { getSystemLoadIndicatorIcon } from "../utils/icons";
-import { ListMetadataSectionHeader } from "../components/ListMetadataSectionHeader";
-import { renderStatValue } from "../utils/stats";
+import { SystemStat } from "../../types/system-stat";
+import type { System } from "../../types/system";
+import { useFormat } from "../../hooks/use-format";
+import { usePreferences } from "../../hooks/use-preferences";
+import { useListCollection } from "../../hooks/use-list-collection";
+import { ListMetadataSectionHeader } from "../ListMetadataSectionHeader";
+import { IntervalDropdown } from "../IntervalDropdown";
+import { getSystemLoadIndicatorIcon } from "../../utils/icons";
+import { renderStatValue } from "../../utils/stats";
 
 /**
  * Calculate load average of the system (current: memory, cpu and docker)
@@ -19,12 +21,17 @@ const getAverageLoadPercentage = (stat: SystemStat) => {
   return respectedStats.reduce((a, b) => a + b) / respectedStats.length;
 };
 
-export const StatsDetailView: FC<{ system: System; id: string }> = ({ system, id }) => {
+export interface StatsDetailViewProps {
+  system: System;
+}
+
+export function StatsDetailView({ system }: StatsDetailViewProps) {
+  const preferences = usePreferences();
   const { dateTimeFormat } = useFormat();
-  const [interval, setInterval] = useState<string | null>("120m");
+  const [interval, setInterval] = useState<string>(preferences.defaultInterval);
 
   const { data, isLoading, revalidate, pagination } = useListCollection<SystemStat>("system_stats", {
-    filter: `system='${id}'&&type='${interval}'`,
+    filter: `system='${system.id}'&&type='${interval}'`,
     sort: "-created",
   });
 
@@ -41,10 +48,6 @@ export const StatsDetailView: FC<{ system: System; id: string }> = ({ system, id
     [interval],
   );
 
-  useEffect(() => {
-    revalidate();
-  }, [interval]);
-
   return (
     <List
       key={`${interval}`}
@@ -52,20 +55,7 @@ export const StatsDetailView: FC<{ system: System; id: string }> = ({ system, id
       isShowingDetail
       pagination={pagination}
       navigationTitle={`Beszel - ${system.name}`}
-      searchBarAccessory={
-        <List.Dropdown
-          value={interval || "480m"}
-          onChange={handleIntervalChange}
-          tooltip="Select interval"
-          defaultValue="480m"
-        >
-          <List.Dropdown.Item title="1 Minute" value="1m" />
-          <List.Dropdown.Item title="10 Minutes" value="10m" />
-          <List.Dropdown.Item title="20 Minutes" value="20m" />
-          <List.Dropdown.Item title="2 Hours" value="120m" />
-          <List.Dropdown.Item title="8 Hours" value="480m" />
-        </List.Dropdown>
-      }
+      searchBarAccessory={<IntervalDropdown value={interval} onChange={handleIntervalChange} />}
     >
       {sortedData.map((stat) => (
         <List.Item
@@ -107,4 +97,4 @@ export const StatsDetailView: FC<{ system: System; id: string }> = ({ system, id
       ))}
     </List>
   );
-};
+}

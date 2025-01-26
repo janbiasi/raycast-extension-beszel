@@ -4,11 +4,15 @@ export interface BeszelPreferences {
   host: string;
   token: string;
   formatterLocale?: string;
+  defaultInterval: string;
+  observationInterval: string;
+  observationIntervalsCount: number;
 }
 
 export function usePreferences(): Required<BeszelPreferences> {
+  const prefs = getPreferenceValues<ExtensionPreferences & Preferences.BeszelMenubar>();
   return {
-    formatterLocale: "en",
-    ...getPreferenceValues<BeszelPreferences>(),
+    ...prefs,
+    observationIntervalsCount: Number.parseInt(prefs.observationIntervalsCount || "5", 10),
   };
 }

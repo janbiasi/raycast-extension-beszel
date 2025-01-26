@@ -22,6 +22,7 @@ export default function AlertsCommand({ launchContext }: LaunchProps) {
 
   return (
     <List
+      navigationTitle="Beszel - Alerts"
       isShowingDetail={isShowingDetail}
       isLoading={isLoading || systemsLoader.isLoading}
       filtering={true}

@@ -1,24 +1,31 @@
 import { List } from "@raycast/api";
-import { useCallback, useState, type FC } from "react";
+import { useCallback, useState } from "react";
 
-import { useListCollection } from "../hooks/use-list-collection";
-import type { System } from "../types/system";
-import type { ContainerStat } from "../types/container-stat";
+import { useListCollection } from "../../hooks/use-list-collection";
+import type { System } from "../../types/system";
+import type { ContainerStat } from "../../types/container-stat";
 import { ClusteredContainersView } from "./layouts/ClusteredContainersView";
 import { AlphabeticalContainersView } from "./layouts/AlphabeticalContainersView";
+import { usePreferences } from "../../hooks/use-preferences";
 
-export const ContainersView: FC<{ system: System }> = ({ system }) => {
+export interface ContainersViewProps {
+  system: System;
+}
+
+export function ContainersView({ system }: ContainersViewProps) {
+  const preferences = usePreferences();
   const [viewMode, setViewMode] = useState<string | null>("clustered");
 
-  const { data, isLoading } = useListCollection<ContainerStat>("container_stats", {
-    filter: `system='${system.id}'&&type='480m'`,
+  const { data, isLoading, revalidate } = useListCollection<ContainerStat>("container_stats", {
+    filter: `system='${system.id}'&&type='${preferences.observationInterval}'`,
     sort: "-created",
-    perPage: 200, // TODO: one entry already contains all containers, revalidate this
+    perPage: preferences.observationIntervalsCount, // info: each entry contains ALL containers!
   });
 
   const handleViewModeChange = useCallback(
     (id: string) => {
       setViewMode(id);
+      revalidate();
     },
     [viewMode],
   );
@@ -47,8 +54,12 @@ export const ContainersView: FC<{ system: System }> = ({ system }) => {
         </List.Dropdown>
       }
     >
-      {viewMode === "clustered" && <ClusteredContainersView system={system} containers={data} />}
-      {viewMode === "alphabetical" && <AlphabeticalContainersView system={system} containers={data} />}
+      {viewMode === "clustered" && (
+        <ClusteredContainersView system={system} containers={data} containerIds={containerIds} />
+      )}
+      {viewMode === "alphabetical" && (
+        <AlphabeticalContainersView system={system} containers={data} containerIds={containerIds} />
+      )}
     </List>
   );
-};
+}

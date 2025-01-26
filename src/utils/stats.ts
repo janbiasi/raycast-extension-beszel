@@ -19,3 +19,19 @@ export function renderStatValue(
 
   return `${value}${unit}`;
 }
+
+/**
+ * Get uptime string from a seconds value
+ * @param seconds
+ * @returns
+ */
+export function renderUptime(seconds: number) {
+  const days = seconds / 60 / 60 / 24;
+  if (days > 365 * 1.5) {
+    return `${(days / 365).toFixed(1)} years`;
+  } else if (days > 1) {
+    return `${days.toFixed(0)} days`;
+  }
+
+  return `${(days / 24).toFixed(0)} hours`;
+}

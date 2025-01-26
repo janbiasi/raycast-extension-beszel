@@ -5,6 +5,9 @@ export interface ContainerStat {
   stats: ContainerStatStats[];
 }
 
+/**
+ * @see https://github.com/henrygd/beszel/blob/main/beszel/internal/entities/container/container.go
+ */
 export interface ContainerStatStats {
   /**
    * The container name

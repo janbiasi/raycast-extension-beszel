@@ -1,16 +1,19 @@
 import { Action, ActionPanel, Color, Icon, List } from "@raycast/api";
-import type { FC } from "react";
-import { truncateText } from "../utils/truncate";
-import type { ContainerInfoGuess } from "../utils/icons";
-import { ContainerStatsView } from "../views/ContainerStatsView";
+
 import type { System } from "../types/system";
+import { truncateText } from "../utils/truncate";
+import { getSystemUrl } from "../utils/urls";
+import type { ContainerInfoGuess } from "../utils/containers";
+import { ContainerStatsView } from "./views/ContainerStatsView";
 import { usePreferences } from "../hooks/use-preferences";
 
-export const ContainerListItem: FC<{ id: string; info: ContainerInfoGuess; system: System }> = ({
-  id,
-  system,
-  info,
-}) => {
+export interface ContainerListItem {
+  id: string;
+  info: ContainerInfoGuess;
+  system: System;
+}
+
+export function ContainerListItem({ id, system, info }: ContainerListItem) {
   const preferences = usePreferences();
 
   return (
@@ -30,12 +33,9 @@ export const ContainerListItem: FC<{ id: string; info: ContainerInfoGuess; syste
             icon={Icon.LineChart}
             target={<ContainerStatsView containerId={id} system={system} />}
           />
-          <Action.OpenInBrowser
-            title="Open in Browser"
-            url={`${preferences.host}/system/${encodeURIComponent(system.name)}`}
-          />
+          <Action.OpenInBrowser title="Open in Browser" url={getSystemUrl(preferences.host, system)} />
         </ActionPanel>
       }
     />
   );
-};
+}

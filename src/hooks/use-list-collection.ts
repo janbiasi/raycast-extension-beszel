@@ -1,6 +1,8 @@
-import { usePreferences } from "./use-preferences";
+import { captureException } from "@raycast/api";
 import { showFailureToast, useFetch } from "@raycast/utils";
 import type { ListResult } from "pocketbase";
+
+import { usePreferences } from "./use-preferences";
 
 export interface UseListCollectionOptions {
   /**
@@ -17,6 +19,11 @@ export interface UseListCollectionOptions {
    * @example -created
    */
   sort?: string;
+  /**
+   * @see https://pocketbase.io/docs/api-records/#listsearch-records
+   * @example *,expand.relField.name
+   */
+  fields?: string;
 }
 
 export function useListCollection<T>(collection: string, options: UseListCollectionOptions = {}) {
@@ -49,6 +56,10 @@ export function useListCollection<T>(collection: string, options: UseListCollect
         Authorization: `Bearer ${preferences.token}`,
       },
       async onError(error) {
+        console.dir(error);
+        console.dir(error.stack);
+        console.dir(error.cause);
+        captureException(error);
         showFailureToast(error, {
           title: `Failed to list records from ${collection}`,
           message: error.message,

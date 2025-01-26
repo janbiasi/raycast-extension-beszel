@@ -43,8 +43,8 @@
       "name": "defaultInterval",
       "required": false,
       "type": "dropdown",
-      "description": "Default interval for statistic views",
-      "default": "120m",
+      "description": "Default interval for statistic views within raycast",
+      "default": "20m",
       "data": [
         {
           "title": "1 Minute",
@@ -65,6 +65,70 @@
         {
           "title": "8 Hours",
           "value": "480m"
+        }
+      ]
+    },
+    {
+      "title": "Observation Interval",
+      "name": "observationInterval",
+      "required": true,
+      "type": "dropdown",
+      "description": "Observation interval for the menubar",
+      "default": "1m",
+      "data": [
+        {
+          "title": "1 Minute",
+          "value": "1m"
+        },
+        {
+          "title": "10 Minutes",
+          "value": "10m"
+        },
+        {
+          "title": "20 Minutes",
+          "value": "20m"
+        },
+        {
+          "title": "2 Hours",
+          "value": "120m"
+        },
+        {
+          "title": "8 Hours",
+          "value": "480m"
+        }
+      ]
+    },
+    {
+      "title": "Observation Intervals Count",
+      "required": true,
+      "name": "observationIntervalsCount",
+      "description": "How many intervals should be respected when fetching observation data (observation interval x count = amount of datasets)",
+      "type": "dropdown",
+      "default": "2",
+      "data": [
+        {
+          "title": "1x",
+          "value": "1"
+        },
+        {
+          "title": "2x",
+          "value": "2"
+        },
+        {
+          "title": "5x",
+          "value": "5"
+        },
+        {
+          "title": "10x",
+          "value": "10"
+        },
+        {
+          "title": "25x",
+          "value": "25"
+        },
+        {
+          "title": "50x",
+          "value": "50"
         }
       ]
     }
@@ -92,6 +156,13 @@
         "beszel",
         "alerts"
       ]
+    },
+    {
+      "name": "beszel-menubar",
+      "title": "Beszel Menubar",
+      "description": "Enable the Beszel Menubar Extension",
+      "mode": "menu-bar",
+      "disabledByDefault": true
     }
   ],
   "dependencies": {

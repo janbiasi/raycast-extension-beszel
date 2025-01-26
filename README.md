@@ -7,6 +7,7 @@ The extension currently supports the following:
 - Viewing server statistics with interval filter
 - Opening server details in the Beszel web-application
 - View system alerts and their corresponding status
+- Menubar for systems, their loads and alerts
 
 ## Configuration
 

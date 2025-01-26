@@ -1,5 +1,9 @@
 import { List } from "@raycast/api";
 
+/**
+ * Custom metadata section header
+ * @returns
+ */
 export function ListMetadataSectionHeader({
   hasSpaceBefore = true,
   ...props

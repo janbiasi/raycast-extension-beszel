@@ -1,22 +1,17 @@
-import type { FC } from "react";
 import { List } from "@raycast/api";
 
-import type { ContainerStat } from "../../types/container-stat";
-import { guessContainerInfo, type ContainerInfoGuess } from "../../utils/icons";
+import type { ContainerStat } from "../../../types/container-stat";
+import type { System } from "../../../types/system";
+import { guessContainerInfo, type ContainerInfoGuess } from "../../../utils/containers";
+import { ContainerListItem } from "../../ContainerListItem";
 
-import { ContainerListItem } from "../../components/ContainerListItem";
-import type { System } from "../../types/system";
+export interface ClusteredContainersViewProps {
+  containerIds: string[];
+  containers: ContainerStat[];
+  system: System;
+}
 
-export const ClusteredContainersView: FC<{ containers: ContainerStat[]; system: System }> = ({
-  containers,
-  system,
-}) => {
-  const containerIds = containers
-    .map((entry) => entry.stats.map((containerStat) => containerStat.n))
-    .flat()
-    .filter((v, i, a) => a.indexOf(v) === i)
-    .toSorted();
-
+export function ClusteredContainersView({ containerIds, system }: ClusteredContainersViewProps) {
   const clusteredContainers = containerIds
     .map((id) => ({ id, info: guessContainerInfo(id) }))
     .reduce(
@@ -40,4 +35,4 @@ export const ClusteredContainersView: FC<{ containers: ContainerStat[]; system: 
         ))}
     </>
   );
-};
+}

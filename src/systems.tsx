@@ -20,6 +20,7 @@ export default function Command() {
 
   return (
     <List
+      navigationTitle="Beszel - Systems"
       isShowingDetail={isShowingDetail}
       isLoading={isLoading}
       searchBarPlaceholder="Search systems"

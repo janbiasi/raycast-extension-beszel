@@ -1,6 +1,7 @@
 import { Color, Icon, List } from "@raycast/api";
 
 import type { Alert } from "../types/alert";
+import { renderAlertCondition } from "../utils/alerts";
 
 const mapAlertTargetToIcon: Record<Alert["name"], string> = {
   Status: Icon.Power,
@@ -12,18 +13,26 @@ const mapAlertTargetToIcon: Record<Alert["name"], string> = {
 };
 
 /**
- * Retrieve alerting icon (warning or simple dot) based on alert trigger status
+ *
+ * @param target
  * @param isTriggered
+ * @param triggeredColor
+ * @param notTriggeredColor
  * @returns ImageLike
  */
-export const getAlertIndicatorIcon = (target: string, isTriggered = false) => {
+export const getAlertIndicatorIcon = (
+  target: string,
+  isTriggered = false,
+  triggeredColor = Color.Red,
+  notTriggeredColor = Color.Green,
+) => {
   const icon = mapAlertTargetToIcon[target] || Icon.Dot;
 
   if (isTriggered) {
-    return { source: icon, tintColor: Color.Red };
+    return { source: icon, tintColor: triggeredColor };
   }
 
-  return { source: icon, tintColor: Color.Green };
+  return { source: icon, tintColor: notTriggeredColor };
 };
 
 export function AlertListItem({ alert, keywords }: { alert: Alert; keywords?: string[] }) {
@@ -32,7 +41,7 @@ export function AlertListItem({ alert, keywords }: { alert: Alert; keywords?: st
       id={alert.id}
       title={alert.name}
       keywords={keywords}
-      subtitle={alert.min ? `above ${alert.value}% within ${alert.min} minutes` : "all changes"}
+      subtitle={renderAlertCondition(alert)}
       accessories={alert.triggered ? [{ date: new Date(alert.updated) }] : []}
       icon={getAlertIndicatorIcon(alert.name, alert.triggered)}
     />

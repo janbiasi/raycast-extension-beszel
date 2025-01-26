@@ -1,23 +1,24 @@
 import { Action, ActionPanel, Color, Icon, launchCommand, LaunchType, List } from "@raycast/api";
-import { usePreferences } from "../hooks/use-preferences";
+
 import type { System } from "../types/system";
 import type { Alert } from "../types/alert";
-import { StatsDetailView } from "../views/SystemStatsView";
-import { ContainersView } from "../views/ContainersView";
-import { ListMetadataSectionHeader } from "./ListMetadataSectionHeader";
+import { StatsDetailView } from "./views/SystemStatsView";
+import { ContainersView } from "./views/ContainersView";
+import { usePreferences } from "../hooks/use-preferences";
 import { useListCollection } from "../hooks/use-list-collection";
+import { getSystemUrl } from "../utils/urls";
+import { renderAlertCondition } from "../utils/alerts";
+import { renderUptime } from "../utils/stats";
+import { ListMetadataSectionHeader } from "./ListMetadataSectionHeader";
 
-export function SystemListItem({
-  system,
-  isShowingDetail,
-  onToggleDetail,
-}: {
+export interface SystemListItemProps {
   system: System;
   isShowingDetail: boolean;
   onToggleDetail: () => void;
-}) {
-  const preferences = usePreferences();
+}
 
+export function SystemListItem({ system, isShowingDetail, onToggleDetail }: SystemListItemProps) {
+  const preferences = usePreferences();
   const { data, isLoading } = useListCollection<Alert>("alerts", {
     filter: `system='${system.id}'`,
   });
@@ -41,16 +42,20 @@ export function SystemListItem({
           metadata={
             <List.Item.Detail.Metadata>
               <ListMetadataSectionHeader hasSpaceBefore={false} title="Information" icon={Icon.Info} />
-              <List.Item.Detail.Metadata.Label title="Server" text={system.info.m} />
-              <List.Item.Detail.Metadata.Label title="Kernel" text={system.info.k} />
               <List.Item.Detail.Metadata.Label title="Status" text={system.status} />
-              <List.Item.Detail.Metadata.Label title="CPU" text={`${system.info.c}C / ${system.info.t}T`} />
+              <List.Item.Detail.Metadata.Label title="Uptime" text={`${renderUptime(system.info.u)}`} />
+              <List.Item.Detail.Metadata.Label title="Kernel" text={system.info.k} />
+              <List.Item.Detail.Metadata.Label title="CPU Model" text={system.info.m} />
+              <List.Item.Detail.Metadata.Label
+                title="CPU Core/Threads"
+                text={`${system.info.c}C / ${system.info.t}T`}
+              />
               <ListMetadataSectionHeader title="Configured Alerts" icon={Icon.Bell} />
               {data.map((alertInfo) => (
                 <List.Item.Detail.Metadata.Label
                   key={alertInfo.id}
                   title={alertInfo.name}
-                  text={alertInfo.min ? `> ${alertInfo.value}% within ${alertInfo.min}min` : "all changes"}
+                  text={renderAlertCondition(alertInfo)}
                 />
               ))}
               <ListMetadataSectionHeader title="Agent" icon={Icon.Network} />
@@ -68,20 +73,8 @@ export function SystemListItem({
             icon={isShowingDetail ? Icon.EyeDisabled : Icon.Eye}
             onAction={onToggleDetail}
           />
-          <Action.Push
-            title="Show System Stats"
-            icon={Icon.LineChart}
-            target={<StatsDetailView system={system} id={system.id} />}
-          />
-          <Action.Push
-            title="Show Containers"
-            shortcut={{
-              key: "c",
-              modifiers: [],
-            }}
-            icon={Icon.Box}
-            target={<ContainersView system={system} />}
-          />
+          <Action.Push title="Show Containers" icon={Icon.Box} target={<ContainersView system={system} />} />
+          <Action.Push title="Show System Stats" icon={Icon.LineChart} target={<StatsDetailView system={system} />} />
           <Action
             title="Show Alerts"
             shortcut={{
@@ -105,7 +98,7 @@ export function SystemListItem({
               key: "b",
               modifiers: [],
             }}
-            url={`${preferences.host}/system/${encodeURIComponent(system.name)}`}
+            url={getSystemUrl(preferences.host, system)}
           />
         </ActionPanel>
       }
