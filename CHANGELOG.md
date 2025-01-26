@@ -1,3 +1,5 @@
 # Beszel Changelog
 
-## [Initial Version] - {PR_MERGE_DATE}
+## [Initial Beszel] - {PR_MERGE_DATE}
+
+Initial version code

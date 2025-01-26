@@ -52,33 +52,3 @@ export const ContainersView: FC<{ system: System }> = ({ system }) => {
     </List>
   );
 };
-
-/* {data.map((stat) => (
-        <List.Item
-          key={stat.type + stat.created}
-          accessories={[{ date: new Date(stat.created) }]}
-          title={dateTimeFormat.format(new Date(stat.updated))}
-          //   subtitle={`${getAverageLoadPercentage(stat).toFixed(0)}%`}
-          //   icon={getSystemLoadIndicatorIcon(getAverageLoadPercentage(stat))}
-          detail={
-            <List.Item.Detail
-              key={`${interval}-${stat.type}-${stat.created}`}
-              //   metadata={
-              //     <List.Item.Detail.Metadata>
-              //       <ListMetadataSectionHeader hasSpaceBefore={false} title="Usage" icon={Icon.MemoryChip} />
-              //       <List.Item.Detail.Metadata.Label title="Docker CPU Usage" text={`${stat.stats.dp.toFixed(2)}%`} />
-              //       <List.Item.Detail.Metadata.Label title="CPU Usage" text={`${stat.stats.cpu.toFixed(2)}%`} />
-              //       <List.Item.Detail.Metadata.Label title="Memory Usage" text={`${stat.stats.mp.toFixed(2)}%`} />
-              //       <ListMetadataSectionHeader title="Disk I/O" icon={Icon.HardDrive} />
-              //       <List.Item.Detail.Metadata.Label title="Usage" text={`${stat.stats.dp.toFixed(2)}%`} />
-              //       <List.Item.Detail.Metadata.Label title="Read" text={`${stat.stats.dr.toFixed(2)} MB/s`} />
-              //       <List.Item.Detail.Metadata.Label title="Write" text={`${stat.stats.dw.toFixed(2)} MB/s`} />
-              //       <ListMetadataSectionHeader title="Bandwidth" icon={Icon.Network} />
-              //       <List.Item.Detail.Metadata.Label title="Sent" text={`${stat.stats.ns.toFixed(2)} MBs`} />
-              //       <List.Item.Detail.Metadata.Label title="Received" text={`${stat.stats.nr.toFixed(2)} MBs`} />
-              //     </List.Item.Detail.Metadata>
-              //   }
-            />
-          }
-        />
-      ))} */

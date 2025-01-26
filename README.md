@@ -6,13 +6,14 @@ The extension currently supports the following:
 - Listing servers with information (status, kernel, connection, configured alerts)
 - Viewing server statistics with interval filter
 - Opening server details in the Beszel web-application
+- View system alerts and their corresponding status
 
 ## Configuration
 
-To use this extension, you will need:
+To use this extension, you will need to provide:
 
-- An accesible Beszel instance
-- An API token (see [their docs](https://pocketbase.io/docs/authentication/#api-keys) for more information)
+- A Host URL to an accesible Beszel instance
+- An API token, see [their docs](https://pocketbase.io/docs/authentication/#api-keys) for more information on how to obtain one
 
 ## Disclaimer
 

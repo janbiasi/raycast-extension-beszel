@@ -5,9 +5,9 @@ export interface Alert {
   /**
    * @example Status, CPU, Memory, Disk, Temperature, Bandwidth
    */
-  name: string;
-  value: number;
-  min: number;
+  name: "Status" | "CPU" | "Memory" | "Disk" | "Temperature" | "Bandwidth" | string;
+  value?: number;
+  min?: number;
   triggered: boolean;
   updated: string;
   created: string;

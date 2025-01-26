@@ -4,12 +4,15 @@ import { truncateText } from "../utils/truncate";
 import type { ContainerInfoGuess } from "../utils/icons";
 import { ContainerStatsView } from "../views/ContainerStatsView";
 import type { System } from "../types/system";
+import { usePreferences } from "../hooks/use-preferences";
 
 export const ContainerListItem: FC<{ id: string; info: ContainerInfoGuess; system: System }> = ({
   id,
   system,
   info,
 }) => {
+  const preferences = usePreferences();
+
   return (
     <List.Item
       id={id}
@@ -26,6 +29,10 @@ export const ContainerListItem: FC<{ id: string; info: ContainerInfoGuess; syste
             title="Show Stats"
             icon={Icon.LineChart}
             target={<ContainerStatsView containerId={id} system={system} />}
+          />
+          <Action.OpenInBrowser
+            title="Open in Browser"
+            url={`${preferences.host}/system/${encodeURIComponent(system.name)}`}
           />
         </ActionPanel>
       }

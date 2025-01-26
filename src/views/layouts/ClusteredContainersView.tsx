@@ -32,7 +32,7 @@ export const ClusteredContainersView: FC<{ containers: ContainerStat[]; system: 
       {Object.keys(clusteredContainers)
         .sort()
         .map((cluster) => (
-          <List.Section title={cluster} subtitle={`${clusteredContainers[cluster].length}`}>
+          <List.Section key={cluster} title={cluster} subtitle={`${clusteredContainers[cluster].length}`}>
             {clusteredContainers[cluster].map(({ id, info }) => (
               <ContainerListItem key={id} id={id} info={info} system={system} />
             ))}

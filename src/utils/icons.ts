@@ -1,4 +1,4 @@
-import { Color, Icon, type Image, type ImageLike } from "@raycast/api";
+import { Color, Icon, type Image } from "@raycast/api";
 
 /**
  * Retrieve the up/down status indicator icon based on the beszel status string

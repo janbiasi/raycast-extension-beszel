@@ -9,6 +9,7 @@
     "pocketbase"
   ],
   "categories": [
+    "Applications",
     "Developer Tools"
   ],
   "license": "MIT",
@@ -36,15 +37,61 @@
       "type": "textfield",
       "description": "Locale configuration for Intl formatters like date and time, see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl for available options",
       "default": "en"
+    },
+    {
+      "title": "Default Interval",
+      "name": "defaultInterval",
+      "required": false,
+      "type": "dropdown",
+      "description": "Default interval for statistic views",
+      "default": "120m",
+      "data": [
+        {
+          "title": "1 Minute",
+          "value": "1m"
+        },
+        {
+          "title": "10 Minutes",
+          "value": "10m"
+        },
+        {
+          "title": "20 Minutes",
+          "value": "20m"
+        },
+        {
+          "title": "2 Hours",
+          "value": "120m"
+        },
+        {
+          "title": "8 Hours",
+          "value": "480m"
+        }
+      ]
     }
   ],
   "commands": [
     {
-      "name": "list-systems",
-      "title": "List Beszel Systems",
+      "name": "systems",
+      "title": "View Systems",
       "subtitle": "Beszel",
-      "description": "List beszel systems and their current usage",
-      "mode": "view"
+      "description": "View Systems and Containers",
+      "mode": "view",
+      "keywords": [
+        "beszel",
+        "systems",
+        "containers"
+      ]
+    },
+    {
+      "name": "alerts",
+      "title": "View Alerts",
+      "subtitle": "Beszel",
+      "description": "View all Alerts",
+      "mode": "view",
+      "keywords": [
+        "beszel",
+        "alerts"
+      ]
     }
   ],
   "dependencies": {
@@ -54,10 +101,13 @@
   },
   "devDependencies": {
     "@raycast/eslint-config": "^1.0.11",
+    "@semantic-release/changelog": "6.0.3",
+    "@semantic-release/git": "10.0.1",
     "@types/node": "20.8.10",
     "@types/react": "18.3.3",
     "eslint": "^8.57.0",
     "prettier": "^3.3.3",
+    "semantic-release": "24.2.1",
     "typescript": "^5.4.5"
   },
   "scripts": {

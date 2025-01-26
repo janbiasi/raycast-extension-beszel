@@ -1,4 +1,4 @@
-import { Action, ActionPanel, Color, Icon, List } from "@raycast/api";
+import { Action, ActionPanel, Color, Icon, launchCommand, LaunchType, List } from "@raycast/api";
 import { usePreferences } from "../hooks/use-preferences";
 import type { System } from "../types/system";
 import type { Alert } from "../types/alert";
@@ -46,15 +46,13 @@ export function SystemListItem({
               <List.Item.Detail.Metadata.Label title="Status" text={system.status} />
               <List.Item.Detail.Metadata.Label title="CPU" text={`${system.info.c}C / ${system.info.t}T`} />
               <ListMetadataSectionHeader title="Configured Alerts" icon={Icon.Bell} />
-              {data
-                .filter((alertInfo) => alertInfo.value > 0)
-                .map((alertInfo) => (
-                  <List.Item.Detail.Metadata.Label
-                    key={alertInfo.id}
-                    title={alertInfo.name}
-                    text={`> ${alertInfo.value}% within ${alertInfo.min}min`}
-                  />
-                ))}
+              {data.map((alertInfo) => (
+                <List.Item.Detail.Metadata.Label
+                  key={alertInfo.id}
+                  title={alertInfo.name}
+                  text={alertInfo.min ? `> ${alertInfo.value}% within ${alertInfo.min}min` : "all changes"}
+                />
+              ))}
               <ListMetadataSectionHeader title="Agent" icon={Icon.Network} />
               <List.Item.Detail.Metadata.Label title="Version" text={system.info.v} />
               <List.Item.Detail.Metadata.Label title="Hostname" text={system.info.h} />
@@ -83,6 +81,23 @@ export function SystemListItem({
             }}
             icon={Icon.Box}
             target={<ContainersView system={system} />}
+          />
+          <Action
+            title="Show Alerts"
+            shortcut={{
+              key: "a",
+              modifiers: [],
+            }}
+            icon={Icon.Bell}
+            onAction={() => {
+              launchCommand({
+                name: "alerts",
+                type: LaunchType.UserInitiated,
+                context: {
+                  search: system.name,
+                },
+              });
+            }}
           />
           <Action.OpenInBrowser
             title="View in Browser"

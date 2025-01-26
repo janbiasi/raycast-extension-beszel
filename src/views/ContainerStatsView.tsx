@@ -7,14 +7,19 @@ import type { ContainerStat, ContainerStatStats } from "../types/container-stat"
 import { getSystemLoadIndicatorIcon } from "../utils/icons";
 import { useFormat } from "../hooks/use-format";
 import { ListMetadataSectionHeader } from "../components/ListMetadataSectionHeader";
+import { renderStatValue } from "../utils/stats";
 
 /**
  * Calculate load average of a single container (current: memory and cpu)
  * @param stat
  * @returns 0 - 100
  */
-const getAverageLoadPercentage = (stat: ContainerStatStats) => {
-  const respectedStats = [stat.c, stat.m].filter(Boolean);
+const getAverageLoadPercentage = (stat?: ContainerStatStats) => {
+  if (!stat) {
+    return 0;
+  }
+
+  const respectedStats = [stat.c].filter(Boolean);
   return respectedStats.reduce((a, b) => a + b) / respectedStats.length;
 };
 
@@ -64,7 +69,7 @@ export const ContainerStatsView: FC<{ system: System; containerId: string }> = (
             key={entry.type + entry.created + containerId}
             accessories={[{ date: new Date(entry.created) }]}
             title={dateTimeFormat.format(new Date(entry.updated))}
-            subtitle={`${getAverageLoadPercentage(stat!).toFixed(0)}%`}
+            subtitle={`${renderStatValue(getAverageLoadPercentage(stat), "%", 0)}`}
             icon={getSystemLoadIndicatorIcon(getAverageLoadPercentage(stat))}
             detail={
               <List.Item.Detail
@@ -72,11 +77,14 @@ export const ContainerStatsView: FC<{ system: System; containerId: string }> = (
                 metadata={
                   <List.Item.Detail.Metadata>
                     <ListMetadataSectionHeader hasSpaceBefore={false} title="Usage" icon={Icon.MemoryChip} />
-                    <List.Item.Detail.Metadata.Label title="CPU Usage" text={`${stat.c.toFixed(2)}%`} />
-                    <List.Item.Detail.Metadata.Label title="Memory Usage" text={`${stat.m.toFixed(2)} MB/s ()`} />
+                    <List.Item.Detail.Metadata.Label title="CPU Usage" text={`${renderStatValue(stat?.c, "%")}`} />
+                    <List.Item.Detail.Metadata.Label
+                      title="Memory Usage"
+                      text={`${renderStatValue(stat?.m, "MB/s")}`}
+                    />
                     <ListMetadataSectionHeader title="Bandwidth" icon={Icon.Network} />
-                    <List.Item.Detail.Metadata.Label title="Sent" text={`${stat.ns.toFixed(2)} MBs`} />
-                    <List.Item.Detail.Metadata.Label title="Received" text={`${stat.nr.toFixed(2)} MBs`} />
+                    <List.Item.Detail.Metadata.Label title="Sent" text={`${renderStatValue(stat?.ns, "MB/s")}`} />
+                    <List.Item.Detail.Metadata.Label title="Received" text={`${renderStatValue(stat?.nr, "MB/s")}`} />
                   </List.Item.Detail.Metadata>
                 }
               />
@@ -87,33 +95,3 @@ export const ContainerStatsView: FC<{ system: System; containerId: string }> = (
     </List>
   );
 };
-
-/* {data.map((stat) => (
-        <List.Item
-          key={stat.type + stat.created}
-          accessories={[{ date: new Date(stat.created) }]}
-          title={dateTimeFormat.format(new Date(stat.updated))}
-          //   subtitle={`${getAverageLoadPercentage(stat).toFixed(0)}%`}
-          //   icon={getSystemLoadIndicatorIcon(getAverageLoadPercentage(stat))}
-          detail={
-            <List.Item.Detail
-              key={`${interval}-${stat.type}-${stat.created}`}
-              //   metadata={
-              //     <List.Item.Detail.Metadata>
-              //       <ListMetadataSectionHeader hasSpaceBefore={false} title="Usage" icon={Icon.MemoryChip} />
-              //       <List.Item.Detail.Metadata.Label title="Docker CPU Usage" text={`${stat.stats.dp.toFixed(2)}%`} />
-              //       <List.Item.Detail.Metadata.Label title="CPU Usage" text={`${stat.stats.cpu.toFixed(2)}%`} />
-              //       <List.Item.Detail.Metadata.Label title="Memory Usage" text={`${stat.stats.mp.toFixed(2)}%`} />
-              //       <ListMetadataSectionHeader title="Disk I/O" icon={Icon.HardDrive} />
-              //       <List.Item.Detail.Metadata.Label title="Usage" text={`${stat.stats.dp.toFixed(2)}%`} />
-              //       <List.Item.Detail.Metadata.Label title="Read" text={`${stat.stats.dr.toFixed(2)} MB/s`} />
-              //       <List.Item.Detail.Metadata.Label title="Write" text={`${stat.stats.dw.toFixed(2)} MB/s`} />
-              //       <ListMetadataSectionHeader title="Bandwidth" icon={Icon.Network} />
-              //       <List.Item.Detail.Metadata.Label title="Sent" text={`${stat.stats.ns.toFixed(2)} MBs`} />
-              //       <List.Item.Detail.Metadata.Label title="Received" text={`${stat.stats.nr.toFixed(2)} MBs`} />
-              //     </List.Item.Detail.Metadata>
-              //   }
-            />
-          }
-        />
-      ))} */
