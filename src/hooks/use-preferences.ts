@@ -10,7 +10,7 @@ export interface BeszelPreferences {
 }
 
 export function usePreferences(): Required<BeszelPreferences> {
-  const prefs = getPreferenceValues<ExtensionPreferences & Preferences.BeszelMenubar>();
+  const prefs = getPreferenceValues<ExtensionPreferences>();
   return {
     ...prefs,
     observationIntervalsCount: Number.parseInt(prefs.observationIntervalsCount || "5", 10),
