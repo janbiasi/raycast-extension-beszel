@@ -35,7 +35,7 @@ export function SystemMenuBarItem({ system }: { system: System }) {
   });
 
   const handleClick = useCallback(() => {
-    open(getSystemUrl(preferences.host, system)).catch((error) => captureException(error));
+    open(getSystemUrl(preferences.host, system)).catch(captureException);
   }, [preferences, system]);
 
   const handleRefresh = useCallback(() => {
@@ -67,7 +67,11 @@ export function SystemMenuBarItem({ system }: { system: System }) {
     >
       <MenuBarExtra.Item
         icon={Icon.Clock}
-        title={`Data loaded at ${dateTimeFormat.format(new Date(stats.data[0]?.updated))}`}
+        title={
+          stats.data.length > 0
+            ? `Data loaded at ${dateTimeFormat.format(new Date(stats.data[0]?.updated))}`
+            : "Unable to load data"
+        }
       />
       <MenuBarExtra.Section title="Statistics">
         <MenuBarExtra.Item
@@ -115,7 +119,7 @@ export function SystemMenuBarItem({ system }: { system: System }) {
       </MenuBarExtra.Section>
       <MenuBarExtra.Section title="Actions">
         <MenuBarExtra.Item
-          title="Open in Beszel"
+          title="Open in Browser"
           icon={Icon.Globe}
           shortcut={Keyboard.Shortcut.Common.Open}
           onAction={handleClick}

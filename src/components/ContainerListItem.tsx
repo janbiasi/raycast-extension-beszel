@@ -1,4 +1,4 @@
-import { Action, ActionPanel, Color, Icon, List } from "@raycast/api";
+import { Action, ActionPanel, Color, Icon, Keyboard, List } from "@raycast/api";
 
 import type { System } from "../types/system";
 import { truncateText } from "../utils/truncate";
@@ -33,7 +33,11 @@ export function ContainerListItem({ id, system, info }: ContainerListItem) {
             icon={Icon.LineChart}
             target={<ContainerStatsView containerId={id} system={system} />}
           />
-          <Action.OpenInBrowser title="Open in Browser" url={getSystemUrl(preferences.host, system)} />
+          <Action.OpenInBrowser
+            title="Open in Browser"
+            shortcut={Keyboard.Shortcut.Common.Open}
+            url={getSystemUrl(preferences.host, system)}
+          />
         </ActionPanel>
       }
     />

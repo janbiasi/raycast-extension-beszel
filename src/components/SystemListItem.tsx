@@ -1,4 +1,14 @@
-import { Action, ActionPanel, Color, Icon, launchCommand, LaunchType, List } from "@raycast/api";
+import {
+  Action,
+  ActionPanel,
+  captureException,
+  Color,
+  Icon,
+  Keyboard,
+  launchCommand,
+  LaunchType,
+  List,
+} from "@raycast/api";
 
 import type { System } from "../types/system";
 import type { Alert } from "../types/alert";
@@ -89,15 +99,12 @@ export function SystemListItem({ system, isShowingDetail, onToggleDetail }: Syst
                 context: {
                   search: system.name,
                 },
-              });
+              }).catch(captureException);
             }}
           />
           <Action.OpenInBrowser
-            title="View in Browser"
-            shortcut={{
-              key: "b",
-              modifiers: [],
-            }}
+            title="Open in Browser"
+            shortcut={Keyboard.Shortcut.Common.Open}
             url={getSystemUrl(preferences.host, system)}
           />
         </ActionPanel>

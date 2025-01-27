@@ -6,7 +6,8 @@ import { usePreferences } from "./use-preferences";
 
 export interface UseListCollectionOptions {
   /**
-   * How many items per page
+   * How many items to load per page.
+   * Only set if not using raycasts pagination feature on a list view
    */
   perPage?: number;
   /**
@@ -36,13 +37,10 @@ export function useListCollection<T>(collection: string, options: UseListCollect
 
   return useFetch(
     (opts) => {
-      const url = new URL(`/api/collections/${collection}/records`, preferences.host);
       queryParams.set("page", String(opts.page + 1)); // increment page as pages start with 1
-      const queryString = queryParams.toString().length > 0 ? `?${queryParams.toString()}` : "";
-      return `${url}${queryString}` satisfies RequestInfo;
+      return `${new URL(`/api/collections/${collection}/records`, preferences.host)}?${queryParams.toString()}` satisfies RequestInfo;
     },
     {
-      cache: "no-cache",
       keepPreviousData: true,
       initialData: [],
       mapResult(result: ListResult<T>) {
@@ -56,12 +54,9 @@ export function useListCollection<T>(collection: string, options: UseListCollect
         Authorization: `Bearer ${preferences.token}`,
       },
       async onError(error) {
-        console.dir(error);
-        console.dir(error.stack);
-        console.dir(error.cause);
         captureException(error);
         showFailureToast(error, {
-          title: `Failed to list records from ${collection}`,
+          title: `Failed to ${collection} records`,
           message: error.message,
         });
       },

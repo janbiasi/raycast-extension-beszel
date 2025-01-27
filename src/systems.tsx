@@ -23,7 +23,7 @@ export default function Command() {
       navigationTitle="Beszel - Systems"
       isShowingDetail={isShowingDetail}
       isLoading={isLoading}
-      searchBarPlaceholder="Search systems"
+      searchBarPlaceholder="Search Systems"
       pagination={pagination}
       actions={
         <ActionPanel>

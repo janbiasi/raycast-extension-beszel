@@ -26,7 +26,7 @@ export default function AlertsCommand({ launchContext }: LaunchProps) {
       isShowingDetail={isShowingDetail}
       isLoading={isLoading || systemsLoader.isLoading}
       filtering={true}
-      searchBarPlaceholder="Search alerts or systems"
+      searchBarPlaceholder="Search Alerts or Systems"
       searchText={searchText}
       onSearchTextChange={setSearchText}
       pagination={pagination}

@@ -29,7 +29,7 @@ export function ContainerMenuBarItem({ system, containerId, containers }: Contai
   const averageMemoryUsed = average(containerStats.map((cs) => cs.m));
 
   const handleClick = useCallback(() => {
-    open(getSystemUrl(preferences.host, system)).catch((error) => captureException(error));
+    open(getSystemUrl(preferences.host, system)).catch(captureException);
   }, [preferences, system]);
 
   return (
